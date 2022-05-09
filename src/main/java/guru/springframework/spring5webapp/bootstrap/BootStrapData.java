@@ -24,27 +24,39 @@ public class BootStrapData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+        System.out.println("Started in Bootstrap");
+
+        Publisher randomHouse = new Publisher("Random House", "100 New York Street", "New York", "New York", 60007);
+        publisherRepository.save(randomHouse);
+
+        System.out.println("Number of Publishers before: " + publisherRepository.count());
+
         Author eric = new Author("Eric", "Evans");
         Book ddd = new Book("Domain Driven Design", "123123");
         eric.getBooks().add(ddd);
         ddd.getAuthors().add(eric);
 
+        ddd.setPublisher(randomHouse);
+        randomHouse.getBooks().add(ddd);
+
         authorRepository.save(eric);
         bookRepository.save(ddd);
+        publisherRepository.save(randomHouse);
 
         Author rod = new Author("Rod", "Johnson");
         Book noEJB = new Book("J2EE Development without EJB", "3939459459");
         rod.getBooks().add(noEJB);
         noEJB.getAuthors().add(rod);
+        noEJB.setPublisher(randomHouse);
+        randomHouse.getBooks().add(noEJB);
 
         authorRepository.save(rod);
         bookRepository.save(noEJB);
-
-        System.out.println("Started in Bootstrap");
-        System.out.println("Number of Books: " + bookRepository.count());
-
-        Publisher randomHouse = new Publisher("Random House", "100 New York Street", "New York", "New York", 60007);
         publisherRepository.save(randomHouse);
-        System.out.println("Number of Publishers: " + publisherRepository.count());
+
+
+        System.out.println("Number of Books: " + bookRepository.count());
+        System.out.println("Number of Books that Publishers have: " + randomHouse.getBooks().size());
     }
 }
